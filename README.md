@@ -93,3 +93,7 @@
         "msg": "success"
     }
     ```
+
+## Docker / 1Panel 部署
+
+后端支持迁移为 Node.js + Docker 运行，使用 1Panel OpenResty 反向代理和 MySQL/SQLite 数据库。部署文档见 [`README.docker.md`](README.docker.md)，前端兼容清单见 [`docs/api-compatibility.md`](docs/api-compatibility.md)。

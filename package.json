@@ -2,12 +2,23 @@
   "name": "api-emaction",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "deploy": "wrangler deploy",
-    "start": "wrangler dev"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "lint": "eslint src scripts tests",
+    "migrate:mysql": "node scripts/migrate.js mysql",
+    "migrate:sqlite": "node scripts/migrate.js sqlite"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "mysql2": "^3.14.1"
   },
   "devDependencies": {
-    "eslint": "^8.45.0",
-    "wrangler": "^3.0.0"
+    "eslint": "^8.45.0"
   }
 }

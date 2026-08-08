@@ -1,0 +1,24 @@
+services:
+  api:
+    image: ghcr.io/kmoretti/emaction-backend:${IMAGE_TAG:?IMAGE_TAG must be set}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:18080:8080"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
+    # If 1Panel's MySQL network can be shared, uncomment and set MYSQL_HOST to its service name.
+    # networks:
+    #   - emaction-mysql-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+# Uncomment when connecting to an existing 1Panel Docker network.
+# networks:
+#   emaction-mysql-network:
+#     external: true
