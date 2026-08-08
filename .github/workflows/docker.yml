@@ -10,6 +10,11 @@ on:
         description: 'Existing GHCR image tag to deploy'
         required: true
         type: string
+      deploy:
+        description: 'Deploy the selected image to the server over SSH'
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -57,18 +62,30 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           INPUT_IMAGE_TAG: ${{ inputs.image_tag }}
+          INPUT_DEPLOY: ${{ inputs.deploy }}
           REF_NAME: ${{ github.ref_name }}
+          ENABLE_SSH_DEPLOY: ${{ vars.ENABLE_SSH_DEPLOY }}
         run: |
           if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
-            if [[ -z "$INPUT_IMAGE_TAG" ]]; then
-              echo 'workflow_dispatch requires image_tag'
+            if [[ -z "$INPUT_IMAGE_TAG" || "$INPUT_IMAGE_TAG" == "latest" ]]; then
+              echo 'workflow_dispatch requires an immutable image_tag (not latest)'
               exit 1
             fi
             echo "tag=$INPUT_IMAGE_TAG" >> "$GITHUB_OUTPUT"
             echo "build=false" >> "$GITHUB_OUTPUT"
+            echo "deploy=$INPUT_DEPLOY" >> "$GITHUB_OUTPUT"
           else
+            if [[ "$REF_NAME" == "latest" ]]; then
+              echo 'latest is not a valid production tag'
+              exit 1
+            fi
             echo "tag=$REF_NAME" >> "$GITHUB_OUTPUT"
             echo "build=true" >> "$GITHUB_OUTPUT"
+            if [[ "$ENABLE_SSH_DEPLOY" == 'true' ]]; then
+              echo 'deploy=true' >> "$GITHUB_OUTPUT"
+            else
+              echo 'deploy=false' >> "$GITHUB_OUTPUT"
+            fi
           fi
 
       - name: Build and push image
@@ -88,6 +105,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Deploy selected image over SSH
+        if: steps.meta.outputs.deploy == 'true'
         uses: appleboy/ssh-action@v1.2.0
         env:
           DEPLOY_IMAGE_TAG: ${{ steps.meta.outputs.tag }}

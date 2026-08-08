@@ -27,11 +27,11 @@ API 容器只绑定宿主机回环地址，不直接暴露公网。MySQL 不放�
 镜像：`ghcr.io/kmoretti/emaction-backend`。
 
 - 服务器架构：`linux/amd64`。
-- 推送 `v*` tag 自动构建、推送并 SSH 部署。
-- `workflow_dispatch` 可手动指定 tag。
+- 推送 `v*` tag 自动构建并推送镜像；只有仓库变量 `ENABLE_SSH_DEPLOY=true` 时才会继续 SSH 部署。
+- `workflow_dispatch` 可手动指定不可变 tag，并通过 `deploy=true/false` 决定是否 SSH 部署。
 - `ci.yml` 在 `main` push 和 Pull Request 上运行 lint 和测试。
 - 生产使用不可变版本 tag，不依赖 `latest`。
-- GitHub Secrets 需要由部署者配置：`DEPLOY_HOST`、`DEPLOY_USER`、`DEPLOY_SSH_KEY`、`GHCR_USERNAME`、`GHCR_TOKEN`，以及可选 `DEPLOY_PORT`。
+- 开启 SSH 部署前，GitHub Secrets 需要配置：`DEPLOY_HOST`、`DEPLOY_USER`、`DEPLOY_SSH_KEY`、`GHCR_USERNAME`、`GHCR_TOKEN`，以及可选 `DEPLOY_PORT`；未开启部署时不需要这些服务器 Secrets。
 - 服务器需要预先登录私有 GHCR，并在 `/opt/emaction-backend` 准备 `compose.yml`、`.env` 和 `data/`。
 
 ## 服务器准备

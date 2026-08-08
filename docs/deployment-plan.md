@@ -46,7 +46,7 @@ Docker 使用 `Dockerfile` 和 `compose.example.yml`。服务器目录约定：
 
 ## GHCR 发布
 
-镜像为 `ghcr.io/kmoretti/emaction-backend`，GitHub Actions 构建 `linux/amd64`。推送 `v*` tag 会构建、推送并 SSH 到服务器；`workflow_dispatch` 支持手动选择 tag。SSH secrets 只在 GitHub Settings 中配置。生产 compose 必须显式设置不可变的 `IMAGE_TAG`，不能依赖 `latest`。
+镜像为 `ghcr.io/kmoretti/emaction-backend`，GitHub Actions 构建 `linux/amd64`。推送 `v*` tag 会构建并推送镜像；只有仓库变量 `ENABLE_SSH_DEPLOY=true` 时才会 SSH 到服务器。`workflow_dispatch` 支持手动选择不可变 tag，并通过 `deploy=true/false` 选择是否部署。SSH secrets 只在 GitHub Settings 中配置。生产 compose 必须显式设置不可变的 `IMAGE_TAG`，不能依赖 `latest`。
 
 ## 发布验收
 
