@@ -42,11 +42,11 @@ Docker 使用 `Dockerfile` 和 `compose.example.yml`。服务器目录约定：
 └── data/
 ```
 
-应用映射为 `127.0.0.1:18080 -> container:8080`。MySQL 由 1Panel 单独管理，不放入本项目 Compose。
+应用映射为 `127.0.0.1:5666 -> container:8080`。MySQL 由 1Panel 单独管理，不放入本项目 Compose。
 
 ## GHCR 发布
 
-镜像为 `ghcr.io/kmoretti/emaction-backend`，GitHub Actions 构建 `linux/amd64`。推送 `v*` tag 会构建并推送镜像；只有仓库变量 `ENABLE_SSH_DEPLOY=true` 时才会 SSH 到服务器。`workflow_dispatch` 支持手动选择不可变 tag，并通过 `deploy=true/false` 选择是否部署。SSH secrets 只在 GitHub Settings 中配置。生产 compose 必须显式设置不可变的 `IMAGE_TAG`，不能依赖 `latest`。
+镜像为 `ghcr.io/kmoretti/emaction-backend`，GitHub Actions 构建 `linux/amd64`。推送 `v*` tag 会构建并推送镜像；只有仓库变量 `ENABLE_SSH_DEPLOY=true` 时才会 SSH 到服务器。`workflow_dispatch` 支持手动选择不可变 tag，并分别通过 `build=true/false` 和 `deploy=true/false` 选择是否构建推送、是否部署。SSH secrets 只在 GitHub Settings 中配置。生产 compose 必须显式设置不可变的 `IMAGE_TAG`，不能依赖 `latest`。
 
 ## 发布验收
 

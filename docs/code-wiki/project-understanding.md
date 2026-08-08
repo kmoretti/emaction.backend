@@ -36,7 +36,7 @@ PATCH /reaction?targetId=...&reaction_name=...&diff=...
 flowchart LR
     Frontend[emaction.frontend]
     Proxy[1Panel OpenResty<br/>api-emaction.081531.xyz]
-    API[Node.js API container<br/>127.0.0.1:18080 -> :8080]
+    API[Node.js API container<br/>127.0.0.1:5666 -> :8080]
     MySQL[(1Panel MySQL)]
     SQLite[(Persistent SQLite<br/>/data/emaction.sqlite)]
 
@@ -73,7 +73,7 @@ SQLite 文件必须在 Docker `/data` 持久化目录。fallback 数据不会自
 - 镜像：`ghcr.io/kmoretti/emaction-backend`；
 - 架构：`linux/amd64`；
 - 服务器目录：`/opt/emaction-backend`；
-- API 只绑定 `127.0.0.1:18080`；
+- API 只绑定 `127.0.0.1:5666`；
 - MySQL 由 1Panel 独立管理，不放入项目 Compose；
 - `v*` tag 触发 GitHub Actions 构建、GHCR 推送和 SSH 部署；
 - `workflow_dispatch` 支持手动指定镜像 tag；
