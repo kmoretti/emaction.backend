@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+
+const sqliteSchema = fs.readFileSync(new URL('../migrations/001_create_reactions.sqlite.sql', import.meta.url), 'utf8');
 let SqliteRepository;
 let initializeSqliteDatabase;
 let sqliteAvailable = true;
@@ -29,7 +31,7 @@ function tempDatabase() {
 test('SQLite repository applies concurrent deltas without losing increments', { skip: !sqliteAvailable }, async () => {
 	const database = tempDatabase();
 	const config = { sqlite: { path: database.path, busyTimeout: 5000 } };
-	initializeSqliteDatabase(config);
+	initializeSqliteDatabase(config, sqliteSchema);
 	const repository = await SqliteRepository.create(config);
 
 	await Promise.all(Array.from({ length: 50 }, () => repository.applyDelta('page', 'thumbs-up', 1)));
