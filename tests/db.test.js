@@ -13,7 +13,7 @@ try {
 	({ SqliteRepository, initializeSqliteDatabase } = await import('../src/db/sqlite.js'));
 	const probe = tempDatabase();
 	probePath = probe.directory;
-	initializeSqliteDatabase({ sqlite: { path: probe.path, busyTimeout: 1000 } });
+	initializeSqliteDatabase({ sqlite: { path: probe.path, busyTimeout: 1000 } }, sqliteSchema);
 	const repository = new SqliteRepository({ sqlite: { path: probe.path, busyTimeout: 1000 } });
 	await repository.close();
 	fs.rmSync(probe.directory, { recursive: true, force: true });
